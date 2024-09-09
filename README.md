@@ -9,5 +9,5 @@ export PATH="$PATH:./flutter/sdk/flutter/bin"
 
 ### Create the package
 ```
-flutter create --template=package y_auth
+flutter create example --platforms=android,ios
 ```
