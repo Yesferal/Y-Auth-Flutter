@@ -7,7 +7,7 @@ A Flutter package to handle the authentication
 export PATH="$PATH:./flutter/sdk/flutter/bin"
 ```
 
-### Create the package
+### Create the example Android & iOS package
 ```
 flutter create example --platforms=android,ios
 ```
