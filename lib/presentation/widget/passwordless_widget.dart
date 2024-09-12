@@ -14,9 +14,22 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Passwordless')),
+      appBar: AppBar(title: const Text('Continue with email')),
       body: Column(
-        children: [Text("Enter the code")],
+        children: [
+          const Text("We'll check if you have an account and help create one if you don't."),
+          const Text("Email"),
+          const TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: '',
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text('Enabled'),
+          ),
+        ],
       ),
     );
   }
