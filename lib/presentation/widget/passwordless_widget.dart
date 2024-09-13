@@ -1,5 +1,6 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 import 'package:flutter/material.dart';
+import 'package:y_auth/presentation/widget/auth_code_widget.dart';
 
 class PasswordlessScreen extends StatefulWidget {
   const PasswordlessScreen({super.key});
@@ -26,7 +27,12 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AuthCodeScreen()),
+              );
+            },
             child: const Text('Enabled'),
           ),
         ],
