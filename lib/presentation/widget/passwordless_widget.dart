@@ -22,13 +22,14 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
           children: [
             const Text(
                 "We'll check if you have an account and help create one if you don't."),
-            const Text("Email"),
+            const SizedBox(height: 24),
             const TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: '',
+                hintText: 'Email',
               ),
             ),
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(

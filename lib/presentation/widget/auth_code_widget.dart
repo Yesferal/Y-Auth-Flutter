@@ -39,9 +39,12 @@ class _AuthCodeScreenState extends State<AuthCodeScreen> {
             onPressed: () {
               _startTimeout();
             },
-            child: const Text("Resend a code."),
+            child: const Text("Resend a code"),
           )
-        : Text("Resent in ${_timerMaxSeconds - _currentSeconds} seconds.");
+        : TextButton(
+            onPressed: null,
+            child: Text(
+                "Resent in ${_timerMaxSeconds - _currentSeconds} seconds"));
 
     return Scaffold(
       appBar: AppBar(title: const Text('Finish logging in')),
@@ -51,13 +54,14 @@ class _AuthCodeScreenState extends State<AuthCodeScreen> {
           children: [
             const Text(
                 "Once you enter the code we sent to your email, you'll be all toggled in"),
-            const Text("Code"),
+            const SizedBox(height: 24),
             const TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: '',
+                hintText: 'Code',
               ),
             ),
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context)
@@ -68,9 +72,15 @@ class _AuthCodeScreenState extends State<AuthCodeScreen> {
               },
               child: const Text('Continue'),
             ),
-            Row(
-              children: [const Text("Didn't get the code? "), resentCodeWidget],
-            )
+            Padding(
+                padding: EdgeInsets.all(24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text("Didn't get the code?"),
+                    resentCodeWidget
+                  ],
+                )),
           ],
         ),
       ),
