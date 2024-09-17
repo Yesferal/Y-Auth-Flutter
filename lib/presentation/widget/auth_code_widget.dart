@@ -1,4 +1,5 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class AuthCodeScreen extends StatefulWidget {
@@ -11,28 +12,80 @@ class AuthCodeScreen extends StatefulWidget {
 }
 
 class _AuthCodeScreenState extends State<AuthCodeScreen> {
+  late Timer _timer;
+
+  final _interval = const Duration(seconds: 1);
+
+  final int _timerMaxSeconds = 60;
+
+  int _currentSeconds = 0;
+
+  @override
+  void initState() {
+    _startTimeout();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Auth Code')),
-      body: Column(
-        children: [
-          const Text("Please enter your authentication code"),
-          const Text("Code"),
-          const TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: '',
-            ),
-          ),
-          ElevatedButton(
+    var resentCodeWidget = (_currentSeconds >= _timerMaxSeconds)
+        ? TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              _startTimeout();
             },
-            child: const Text('Enabled'),
-          ),
-        ],
+            child: const Text("Resend a code."),
+          )
+        : Text("Resent in ${_timerMaxSeconds - _currentSeconds} seconds.");
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Finish logging in')),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            const Text(
+                "Once you enter the code we sent to your email, you'll be all toggled in"),
+            const Text("Code"),
+            const TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: '',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context)
+                  ..pop()
+                  ..pop();
+                // TODO: Fix this. Use Route with Name instead
+                //Navigator.popUntil(context, ModalRoute.withName('/Home'));
+              },
+              child: const Text('Continue'),
+            ),
+            Row(
+              children: [const Text("Didn't get the code? "), resentCodeWidget],
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  void _startTimeout() {
+    _timer = Timer.periodic(_interval, (timer) {
+      setState(() {
+        debugPrint("Tick time: ${timer.tick}");
+        _currentSeconds = timer.tick;
+        if (timer.tick >= _timerMaxSeconds) {
+          timer.cancel();
+        }
+      });
+    });
   }
 }

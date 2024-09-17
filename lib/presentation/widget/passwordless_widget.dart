@@ -16,26 +16,31 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Continue with email')),
-      body: Column(
-        children: [
-          const Text("We'll check if you have an account and help create one if you don't."),
-          const Text("Email"),
-          const TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: '',
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            const Text(
+                "We'll check if you have an account and help create one if you don't."),
+            const Text("Email"),
+            const TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: '',
+              ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AuthCodeScreen()),
-              );
-            },
-            child: const Text('Enabled'),
-          ),
-        ],
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AuthCodeScreen()),
+                );
+              },
+              child: const Text('Continue'),
+            ),
+          ],
+        ),
       ),
     );
   }
