@@ -1,7 +1,7 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 import 'package:flutter/material.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
-import 'package:y_auth/domain/usecase/get_auth_code_usecase.dart';
+import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
 import 'package:y_auth/domain/usecase/validate_email_usecase.dart';
 import 'package:y_auth/presentation/widget/auth_code_widget.dart';
 
@@ -48,7 +48,7 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                var response = GetAuthCodeUseCase(ValidateEmailUseCase()).execute(_myController.text);
+                var response = RequestAuthCodeUseCase(ValidateEmailUseCase()).execute(_myController.text);
 
                 switch (response) {
                   case ErrorResponse():

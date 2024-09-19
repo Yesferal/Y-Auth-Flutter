@@ -2,7 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
-import 'package:y_auth/domain/usecase/validate_auth_code_usecase.dart';
+import 'package:y_auth/domain/usecase/request_token_usecase.dart';
 
 class AuthCodeScreen extends StatefulWidget {
   const AuthCodeScreen({super.key});
@@ -73,7 +73,7 @@ class _AuthCodeScreenState extends State<AuthCodeScreen> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () async {
-                var response = await ValidateAuthCodeUseCase().execute(_myController.text);
+                var response = await RequestTokenUseCase().execute(_myController.text);
 
                 switch (response) {
                   case ErrorResponse():

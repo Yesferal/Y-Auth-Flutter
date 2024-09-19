@@ -3,10 +3,10 @@
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/usecase/validate_email_usecase.dart';
 
-class GetAuthCodeUseCase {
+class RequestAuthCodeUseCase {
   ValidateEmailUseCase validateEmailUseCase;
 
-  GetAuthCodeUseCase(this.validateEmailUseCase);
+  RequestAuthCodeUseCase(this.validateEmailUseCase);
 
   AuthResponse execute(String email) {
 

@@ -2,9 +2,9 @@
 
 import 'package:y_auth/domain/model/auth_response_model.dart';
 
-class ValidateAuthCodeUseCase {
+class RequestTokenUseCase {
 
-  ValidateAuthCodeUseCase();
+  RequestTokenUseCase();
 
   Future<AuthResponse> execute(String authCode) async {
     if (authCode.isEmpty) {
