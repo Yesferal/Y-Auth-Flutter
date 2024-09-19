@@ -1,15 +1,21 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 
-import 'package:flutter/material.dart';
+import 'package:y_auth/domain/model/auth_response_model.dart';
+import 'package:y_auth/domain/usecase/validate_email_usecase.dart';
 
 class GetAuthCodeUseCase {
+  ValidateEmailUseCase validateEmailUseCase;
 
-  GetAuthCodeUseCase();
+  GetAuthCodeUseCase(this.validateEmailUseCase);
 
-  Future<String?> execute(String email) async {
+  AuthResponse execute(String email) {
+
+    if (!validateEmailUseCase.execute(email)) {
+      const message = "Invalid email";
+      return ErrorResponse(message);
+    }
+
     var message = "Your code was sent to $email";
-    debugPrint(message);
-
-    return message;
+    return SuccessResponse(message);
   }
 }
