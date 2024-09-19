@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
 import 'package:y_auth/domain/usecase/validate_email_usecase.dart';
-import 'package:y_auth/presentation/widget/auth_code_widget.dart';
+import 'package:y_auth/presentation/widget/request_auth_token_widget.dart';
 
-class PasswordlessScreen extends StatefulWidget {
-  const PasswordlessScreen({super.key});
+class RequestAuthCodeScreen extends StatefulWidget {
+  const RequestAuthCodeScreen({super.key});
 
   @override
-  State<PasswordlessScreen> createState() {
-    return _PasswordlessScreenState();
+  State<RequestAuthCodeScreen> createState() {
+    return _RequestAuthCodeScreenState();
   }
 }
 
-class _PasswordlessScreenState extends State<PasswordlessScreen> {
+class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
 
   final _myController = TextEditingController();
 
@@ -62,7 +62,7 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const AuthCodeScreen()),
+                          builder: (context) => const RequestAuthTokenScreen()),
                     );
                     setState(() {
                       _errorMessage = null;

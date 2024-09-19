@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/usecase/request_token_usecase.dart';
 
-class AuthCodeScreen extends StatefulWidget {
-  const AuthCodeScreen({super.key});
+class RequestAuthTokenScreen extends StatefulWidget {
+  const RequestAuthTokenScreen({super.key});
 
   @override
-  State<AuthCodeScreen> createState() {
-    return _AuthCodeScreenState();
+  State<RequestAuthTokenScreen> createState() {
+    return _RequestAuthTokenScreenScreenState();
   }
 }
 
-class _AuthCodeScreenState extends State<AuthCodeScreen> {
+class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
   late Timer _timer;
 
   final _interval = const Duration(seconds: 1);

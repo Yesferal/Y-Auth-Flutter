@@ -1,3 +1,3 @@
 library y_auth;
 
-export 'presentation/widget/passwordless_widget.dart';
+export 'presentation/widget/request_auth_code_widget.dart';
