@@ -1,6 +1,8 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:y_auth/domain/model/auth_response_model.dart';
+import 'package:y_auth/domain/usecase/validate_auth_code_usecase.dart';
 
 class AuthCodeScreen extends StatefulWidget {
   const AuthCodeScreen({super.key});
@@ -20,6 +22,10 @@ class _AuthCodeScreenState extends State<AuthCodeScreen> {
 
   int _currentSeconds = 0;
 
+  final _myController = TextEditingController();
+
+  String? _errorMessage;
+
   @override
   void initState() {
     _startTimeout();
@@ -28,6 +34,7 @@ class _AuthCodeScreenState extends State<AuthCodeScreen> {
 
   @override
   void dispose() {
+    _myController.dispose();
     _timer.cancel();
     super.dispose();
   }
@@ -55,25 +62,45 @@ class _AuthCodeScreenState extends State<AuthCodeScreen> {
             const Text(
                 "Once you enter the code we sent to your email, you'll be all toggled in"),
             const SizedBox(height: 24),
-            const TextField(
+            TextField(
+              controller: _myController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 hintText: 'Code',
+                errorText: _errorMessage,
               ),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context)
-                  ..pop()
-                  ..pop();
-                // TODO: Fix this. Use Route with Name instead
-                //Navigator.popUntil(context, ModalRoute.withName('/Home'));
+              onPressed: () async {
+                var response = await ValidateAuthCodeUseCase().execute(_myController.text);
+
+                switch (response) {
+                  case ErrorResponse():
+                    debugPrint("Error message: ${response.message}");
+                    setState(() {
+                      _errorMessage = response.message;
+                    });
+                    break;
+
+                  case SuccessResponse():
+                    debugPrint("Success message: ${response.data}");
+                    Navigator.of(context)
+                      ..pop()
+                      ..pop();
+                    // TODO: Fix this. Use Route with Name instead
+                    //Navigator.popUntil(context, ModalRoute.withName('/Home'));
+
+                    setState(() {
+                      _errorMessage = null;
+                    });
+                    break;
+                }
               },
               child: const Text('Continue'),
             ),
             Padding(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
