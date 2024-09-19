@@ -18,6 +18,8 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
 
   final _myController = TextEditingController();
 
+  String? _errorMessage;
+
   @override
   void dispose() {
     _myController.dispose();
@@ -37,9 +39,10 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
             const SizedBox(height: 24),
             TextField(
               controller: _myController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
                 hintText: 'Email',
+                errorText: _errorMessage,
               ),
             ),
             const SizedBox(height: 24),
@@ -50,6 +53,9 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
                 switch (response) {
                   case ErrorResponse():
                     debugPrint("Error message: ${response.message}");
+                    setState(() {
+                      _errorMessage = response.message;
+                    });
                     break;
                   case SuccessResponse():
                     debugPrint("Success message: ${response.data}");
@@ -58,6 +64,9 @@ class _PasswordlessScreenState extends State<PasswordlessScreen> {
                       MaterialPageRoute(
                           builder: (context) => const AuthCodeScreen()),
                     );
+                    setState(() {
+                      _errorMessage = null;
+                    });
                     break;
                 }
               },
