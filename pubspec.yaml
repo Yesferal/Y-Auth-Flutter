@@ -10,8 +10,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-    
+
+  # A simple Dart class for validating email addresses without using RegEx.
   email_validator: ^3.0.0
+
+  # Future-based library for making HTTP requests
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
