@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
-import 'package:y_auth/domain/usecase/validate_email_usecase.dart';
+import 'package:y_auth/framework/validator/auth_email_validator_third_party.dart';
 import 'package:y_auth/presentation/widget/request_auth_token_widget.dart';
 
 class RequestAuthCodeScreen extends StatefulWidget {
@@ -48,7 +48,7 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                var response = RequestAuthCodeUseCase(ValidateEmailUseCase()).execute(_myController.text);
+                var response = RequestAuthCodeUseCase(AuthEmailValidatorImpl()).execute(_myController.text);
 
                 switch (response) {
                   case ErrorResponse():

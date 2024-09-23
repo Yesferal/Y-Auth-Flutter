@@ -1,16 +1,16 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 
+import 'package:y_auth/domain/abstract/auth_email_validator.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
-import 'package:y_auth/domain/usecase/validate_email_usecase.dart';
 
 class RequestAuthCodeUseCase {
-  ValidateEmailUseCase validateEmailUseCase;
+  AuthEmailValidator authEmailValidator;
 
-  RequestAuthCodeUseCase(this.validateEmailUseCase);
+  RequestAuthCodeUseCase(this.authEmailValidator);
 
   AuthResponse execute(String email) {
 
-    if (!validateEmailUseCase.execute(email)) {
+    if (!authEmailValidator.validate(email)) {
       const message = "Invalid email";
       return ErrorResponse(message);
     }
