@@ -1,12 +1,20 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 import 'package:flutter/material.dart';
+import 'package:y_auth/domain/abstract/auth_environment.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
+import 'package:y_auth/framework/http/auth_http_datasource.dart';
 import 'package:y_auth/framework/validator/auth_email_validator_third_party.dart';
 import 'package:y_auth/presentation/widget/request_auth_token_widget.dart';
 
 class RequestAuthCodeScreen extends StatefulWidget {
-  const RequestAuthCodeScreen({super.key});
+  final AuthEnvironment authEnvironment;
+  final String appColor;
+  final String appName;
+  final String appPackageName;
+  final String deviceId;
+
+  const RequestAuthCodeScreen(this.authEnvironment, this.appColor, this.appName, this.appPackageName, this.deviceId, {super.key});
 
   @override
   State<RequestAuthCodeScreen> createState() {
@@ -47,23 +55,26 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {
-                var response = RequestAuthCodeUseCase(AuthEmailValidatorImpl()).execute(_myController.text);
+              onPressed: () async {
+                var emailInput = _myController.text;
+                var response = await RequestAuthCodeUseCase(AuthEmailValidatorImpl(), HttpDataSource(widget.authEnvironment)).execute(widget.appColor, widget.appName, emailInput);
 
                 switch (response) {
                   case ErrorResponse():
                     debugPrint("Error message: ${response.message}");
                     setState(() {
-                      _errorMessage = response.message;
+                      _errorMessage = response.displayMessage;
                     });
                     break;
                   case SuccessResponse():
                     debugPrint("Success message: ${response.data}");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RequestAuthTokenScreen()),
-                    );
+                    if (context.mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RequestAuthTokenScreen(widget.authEnvironment, widget.appPackageName, widget.deviceId, emailInput)),
+                      );
+                    }
                     setState(() {
                       _errorMessage = null;
                     });

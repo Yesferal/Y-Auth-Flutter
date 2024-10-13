@@ -10,6 +10,7 @@ class SuccessResponse<T> extends AuthResponse {
 
 class ErrorResponse extends AuthResponse {
   final String message;
+  final String displayMessage;
 
-  ErrorResponse(this.message);
+  ErrorResponse(this.message, this.displayMessage);
 }

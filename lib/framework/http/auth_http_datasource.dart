@@ -1,16 +1,19 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:y_auth/domain/abstract/auth_remote_storage_datasource.dart';
+import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/framework/http/auth_api_routes.dart';
-import 'package:y_auth/framework/http/auth_environment.dart';
-import 'package:y_auth/framework/http/http_helper_third_party.dart';
+import 'package:y_auth/domain/abstract/auth_environment.dart';
 
-class HttpDataSource {
+class HttpDataSource extends RemoteStorageDatasource {
   AuthEnvironment authEnvironment;
 
   HttpDataSource(this.authEnvironment);
 
-  Future<String?> getAuthCodeFromApi(String appColor, String appName, String email) {
+  @override
+  Future<AuthResponse> getAuthCodeFromApi(String appColor, String appName, String email) {
     final query = {
       'appColor': appColor,
       'appName': appName,
@@ -20,7 +23,8 @@ class HttpDataSource {
     return _getResponse(AuthApiRoutes.GET_AUTH_CODE, query);
   }
 
-  Future<String?> getRefreshTokenFromApi(String appPackageName, String authCode, String deviceId, String email,) {
+  @override
+  Future<AuthResponse> getRefreshTokenFromApi(String appPackageName, String authCode, String deviceId, String email,) {
     final query = {
       'appPackageName': appPackageName,
       'authCode': authCode,
@@ -31,21 +35,23 @@ class HttpDataSource {
     return _getResponse(AuthApiRoutes.GET_REFRESH_TOKEN, query);
   }
 
-  Future<String?> _getResponse(String path, Map<String, dynamic> query) async {
+  Future<AuthResponse> _getResponse(String path, Map<String, dynamic> query) async {
+    Uri uri = Uri.https(authEnvironment.authApiHost(), path, query);
+    debugPrint("Uri: ${uri.toString()}");
     try {
-      final String? response = await HttpHelperBuilder()
-          .withHost(authEnvironment.authApiHost())
-          .withPath(path)
-          .withQuery(query)
-          .withHeaders(authEnvironment.authHeaders())
-          .build()
-          .request();
+      Response? response = await get(uri, headers: authEnvironment.authHeaders());
 
-      return response;
-    } on Exception {
-      debugPrint("Bad response format");
+      /// TODO: Handle HTTP error code
+      if (response.statusCode != 200) {
+        var errorMessage = "Get Uri Exception(${response.statusCode}) : ${uri.toString()}";
+        debugPrint(errorMessage);
+        return ErrorResponse(errorMessage, "Try again");
+      }
+      return SuccessResponse(response.body);
+    } catch (e) {
+      var errorMessage = "Get Uri Exception($e) : ${uri.toString()}";
+      debugPrint(errorMessage);
+      return ErrorResponse(errorMessage, "Try again");
     }
-
-    return null;
   }
 }

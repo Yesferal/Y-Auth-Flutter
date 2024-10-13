@@ -1,11 +1,18 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:y_auth/domain/abstract/auth_environment.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/usecase/request_token_usecase.dart';
+import 'package:y_auth/framework/http/auth_http_datasource.dart';
 
 class RequestAuthTokenScreen extends StatefulWidget {
-  const RequestAuthTokenScreen({super.key});
+  final AuthEnvironment authEnvironment;
+  final String appPackageName;
+  final String deviceId;
+  final String email;
+
+  const RequestAuthTokenScreen(this.authEnvironment, this.appPackageName, this.deviceId, this.email, {super.key});
 
   @override
   State<RequestAuthTokenScreen> createState() {
@@ -73,23 +80,25 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () async {
-                var response = await RequestTokenUseCase().execute(_myController.text);
+                var response = await RequestTokenUseCase(HttpDataSource(widget.authEnvironment)).execute(widget.appPackageName, _myController.text, widget.deviceId, widget.email);
 
                 switch (response) {
                   case ErrorResponse():
                     debugPrint("Error message: ${response.message}");
                     setState(() {
-                      _errorMessage = response.message;
+                      _errorMessage = response.displayMessage;
                     });
                     break;
 
                   case SuccessResponse():
                     debugPrint("Success message: ${response.data}");
-                    Navigator.of(context)
-                      ..pop()
-                      ..pop();
-                    // TODO: Fix this. Use Route with Name instead
-                    //Navigator.popUntil(context, ModalRoute.withName('/Home'));
+                    if (context.mounted) {
+                      Navigator.of(context)
+                        ..pop()
+                        ..pop();
+                      // TODO: Fix this. Use Route with Name instead
+                      //Navigator.popUntil(context, ModalRoute.withName('/Home'));
+                    }
 
                     setState(() {
                       _errorMessage = null;

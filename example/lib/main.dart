@@ -1,8 +1,11 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
+import 'package:example/example_auth_environment.dart';
 import 'package:flutter/material.dart';
 import 'package:y_auth/presentation/widget/request_auth_code_widget.dart';
 
 void main() {
+  ExampleAuthEnvironment().init();
+
   runApp(const MyApp());
 }
 
@@ -99,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const RequestAuthCodeScreen()),
+                  MaterialPageRoute(builder: (context) => RequestAuthCodeScreen(ExampleAuthEnvironment(), "#3F35A5", "Y-Auth-ExampleApp", "com.yesferal.auth.example", "TestDevice")),
                 );
               },
               child: const Text('Passwordless Screen'),)
