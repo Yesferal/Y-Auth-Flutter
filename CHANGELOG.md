@@ -1,3 +1,7 @@
+## 1.0.1
+
+* 5d13e4e - (HEAD -> main) Get Device Id / Device Model <Yesferal Cueva>
+
 ## 1.0.0
 
 * 02d8430 - Add label & Expand button <Yesferal Cueva>
