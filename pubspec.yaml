@@ -1,7 +1,7 @@
 name: y_auth
-description: "A new Flutter package project."
+description: "A Yesferal Auth package project."
 version: 0.0.1
-homepage:
+homepage: https://github.com/Yesferal/Y-Auth-Flutter
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
