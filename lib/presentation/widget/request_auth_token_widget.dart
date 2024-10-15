@@ -65,10 +65,13 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
                 "Once you enter the code we sent to your email, you'll be all toggled in"),
             const SizedBox(height: 24),
+            const Text("Code", style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
             TextField(
               controller: _myController,
               decoration: InputDecoration(

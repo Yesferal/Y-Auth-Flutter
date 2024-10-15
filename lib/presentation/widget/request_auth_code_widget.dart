@@ -41,10 +41,13 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
                 "We'll check if you have an account and help create one if you don't."),
             const SizedBox(height: 24),
+            const Text("Email", style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
             TextField(
               controller: _myController,
               decoration: InputDecoration(
