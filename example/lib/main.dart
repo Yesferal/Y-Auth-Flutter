@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RequestAuthCodeScreen(ExampleAuthEnvironment(), "#3F35A5", "Y-Auth-ExampleApp", "com.yesferal.auth.example", "TestDevice")),
+                  MaterialPageRoute(builder: (context) => RequestAuthCodeScreen(ExampleAuthEnvironment(), "#3F35A5", "Y-Auth-ExampleApp", "com.yesferal.auth.example")),
                 );
               },
               child: const Text('Passwordless Screen'),)

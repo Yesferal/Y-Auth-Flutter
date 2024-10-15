@@ -16,6 +16,7 @@ dependencies:
 
   # Future-based library for making HTTP requests
   http: ^1.2.2
+  device_info_plus: ^10.1.2
 
 dev_dependencies:
   flutter_test:

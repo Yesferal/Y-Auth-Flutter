@@ -12,9 +12,8 @@ class RequestAuthCodeScreen extends StatefulWidget {
   final String appColor;
   final String appName;
   final String appPackageName;
-  final String deviceId;
 
-  const RequestAuthCodeScreen(this.authEnvironment, this.appColor, this.appName, this.appPackageName, this.deviceId, {super.key});
+  const RequestAuthCodeScreen(this.authEnvironment, this.appColor, this.appName, this.appPackageName, {super.key});
 
   @override
   State<RequestAuthCodeScreen> createState() {
@@ -75,7 +74,7 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RequestAuthTokenScreen(widget.authEnvironment, widget.appPackageName, widget.deviceId, emailInput)),
+                            builder: (context) => RequestAuthTokenScreen(widget.authEnvironment, widget.appPackageName, emailInput)),
                       );
                     }
                     setState(() {

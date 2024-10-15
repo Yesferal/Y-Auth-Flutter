@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:y_auth/domain/abstract/auth_environment.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/usecase/request_token_usecase.dart';
+import 'package:y_auth/framework/device_info/device_info_plus_datasource.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
 
 class RequestAuthTokenScreen extends StatefulWidget {
   final AuthEnvironment authEnvironment;
   final String appPackageName;
-  final String deviceId;
   final String email;
 
-  const RequestAuthTokenScreen(this.authEnvironment, this.appPackageName, this.deviceId, this.email, {super.key});
+  const RequestAuthTokenScreen(this.authEnvironment, this.appPackageName, this.email, {super.key});
 
   @override
   State<RequestAuthTokenScreen> createState() {
@@ -33,9 +33,12 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
 
   String? _errorMessage;
 
+  String? deviceModel;
+
   @override
   void initState() {
     _startTimeout();
+    _startDeviceModel();
     super.initState();
   }
 
@@ -83,7 +86,8 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () async {
-                var response = await RequestTokenUseCase(HttpDataSource(widget.authEnvironment)).execute(widget.appPackageName, _myController.text, widget.deviceId, widget.email);
+                debugPrint("Device Info: "+ (deviceModel ?? ""));
+                var response = await RequestTokenUseCase(HttpDataSource(widget.authEnvironment)).execute(widget.appPackageName, _myController.text, deviceModel ?? "", widget.email);
 
                 switch (response) {
                   case ErrorResponse():
@@ -136,5 +140,9 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
         }
       });
     });
+  }
+
+  _startDeviceModel() async {
+    deviceModel = await DeviceInfoPlusDatasource().getDeviceName();
   }
 }
