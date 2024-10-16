@@ -69,7 +69,6 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
                     });
                     break;
                   case SuccessResponse():
-                    debugPrint("Success message: ${response.data}");
                     if (context.mounted) {
                       Navigator.push(
                         context,

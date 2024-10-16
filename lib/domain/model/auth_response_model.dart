@@ -3,9 +3,9 @@
 sealed class AuthResponse {}
 
 class SuccessResponse<T> extends AuthResponse {
-  final T data;
+  final T body;
 
-  SuccessResponse(this.data);
+  SuccessResponse(this.body);
 }
 
 class ErrorResponse extends AuthResponse {

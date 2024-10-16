@@ -1,9 +1,11 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:y_auth/domain/abstract/auth_remote_storage_datasource.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
+import 'package:y_auth/domain/model/message_model.dart';
 import 'package:y_auth/framework/http/auth_api_routes.dart';
 import 'package:y_auth/domain/abstract/auth_environment.dart';
 
@@ -43,9 +45,10 @@ class HttpDataSource extends RemoteStorageDatasource {
 
       /// TODO: Handle HTTP error code
       if (response.statusCode != 200) {
-        var errorMessage = "Get Uri Exception(${response.statusCode}) : ${uri.toString()}";
+        MessageModel messageModel = MessageModel.fromJson(json.decode(response.body));
+        var errorMessage = "Get Uri Exception: (${response.statusCode}) ${messageModel.message}. ${uri.toString()}";
         debugPrint(errorMessage);
-        return ErrorResponse(errorMessage, "Try again");
+        return ErrorResponse(errorMessage, messageModel.message ?? "");
       }
       return SuccessResponse(response.body);
     } catch (e) {

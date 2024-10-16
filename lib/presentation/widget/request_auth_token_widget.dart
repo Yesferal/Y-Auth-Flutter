@@ -6,6 +6,7 @@ import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/usecase/request_token_usecase.dart';
 import 'package:y_auth/framework/device_info/device_info_plus_datasource.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
+import 'package:y_auth/framework/preferences/shared_preferences_datasource.dart';
 
 class RequestAuthTokenScreen extends StatefulWidget {
   final AuthEnvironment authEnvironment;
@@ -87,7 +88,7 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
             ElevatedButton(
               onPressed: () async {
                 debugPrint("Device Info: "+ (deviceModel ?? ""));
-                var response = await RequestTokenUseCase(HttpDataSource(widget.authEnvironment)).execute(widget.appPackageName, _myController.text, deviceModel ?? "", widget.email);
+                var response = await RequestTokenUseCase(HttpDataSource(widget.authEnvironment), SharedPreferenceDataSource()).execute(widget.appPackageName, _myController.text, deviceModel ?? "", widget.email);
 
                 switch (response) {
                   case ErrorResponse():
@@ -98,7 +99,6 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
                     break;
 
                   case SuccessResponse():
-                    debugPrint("Success message: ${response.data}");
                     if (context.mounted) {
                       Navigator.of(context)
                         ..pop()
