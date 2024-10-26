@@ -1,7 +1,7 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 import 'package:example/example_auth_environment.dart';
 import 'package:flutter/material.dart';
-import 'package:y_auth/presentation/widget/request_auth_code_widget.dart';
+import 'package:y_auth/y_auth.dart';
 
 void main() {
   ExampleAuthEnvironment().init();
@@ -60,7 +60,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -100,15 +99,43 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RequestAuthCodeScreen(ExampleAuthEnvironment(), "#3F35A5", "Y-Auth-ExampleApp", "com.yesferal.auth.example")),
-                );
+                _navigateToLoginScreen();
               },
-              child: const Text('Passwordless Screen'),)
+              child: const Text('Passwordless Screen'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                YAuthDi(ExampleAuthEnvironment()).getAccessToken().execute(
+                    (token) {
+                  if (token != null) {
+                    debugPrint(
+                        "Access Token: ${token.expressToken?.accessToken}");
+                    debugPrint(
+                        "Refresh Token: ${token.expressToken?.refreshToken}");
+                  } else {
+                    debugPrint("Token is null");
+                    _navigateToLoginScreen();
+                  }
+                }, (message) {
+                  debugPrint("Error Message: ${message}");
+                  _navigateToLoginScreen();
+                });
+              },
+              child: const Text('Get Access token'),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  _navigateToLoginScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => YAuthDi(ExampleAuthEnvironment())
+              .getRequestAuthCodeScreen(
+                  "#3F35A5", "Y-Auth-ExampleApp", "com.yesferal.auth.example")),
     );
   }
 }

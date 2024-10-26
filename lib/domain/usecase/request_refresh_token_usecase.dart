@@ -7,18 +7,18 @@ import 'package:y_auth/domain/abstract/preferences_datasource.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/model/token_model.dart';
 
-class RequestTokenUseCase {
-  RemoteStorageDatasource remoteStorageDatasource;
-  PreferencesDatasource preferencesDatasource;
+class RequestRefreshTokenUseCase {
+  RemoteStorageDatasource _remoteStorageDatasource;
+  PreferencesDatasource _preferencesDatasource;
 
-  RequestTokenUseCase(this.remoteStorageDatasource, this.preferencesDatasource);
+  RequestRefreshTokenUseCase(this._remoteStorageDatasource, this._preferencesDatasource);
 
   Future<AuthResponse> execute(String appPackageName, String authCode, String deviceId, String email) async {
     if (authCode.isEmpty) {
       return ErrorResponse("Invalid code", "Please enter a code");
     }
 
-    var authResponse = await this.remoteStorageDatasource.getRefreshTokenFromApi(appPackageName, authCode, deviceId, email);
+    var authResponse = await _remoteStorageDatasource.getRefreshTokenFromApi(appPackageName, authCode, deviceId, email);
     switch (authResponse) {
       case ErrorResponse():
         break;
@@ -26,11 +26,8 @@ class RequestTokenUseCase {
       case SuccessResponse():
         debugPrint("Body: ${authResponse.body}");
         TokenModel tokenModel = TokenModel.fromJson(json.decode(authResponse.body));
-        if (tokenModel.refreshToken != null) {
-          this.preferencesDatasource.saveRefreshToken(tokenModel.refreshToken ?? "");
-        }
-        if (tokenModel.accessToken != null) {
-          this.preferencesDatasource.saveRefreshToken(tokenModel.accessToken ?? "");
+        if (tokenModel.expressToken?.refreshToken != null) {
+          _preferencesDatasource.saveRefreshToken(tokenModel.expressToken?.refreshToken ?? "");
         }
 
         break;

@@ -37,6 +37,15 @@ class HttpDataSource extends RemoteStorageDatasource {
     return _getResponse(AuthApiRoutes.GET_REFRESH_TOKEN, query);
   }
 
+  @override
+  Future<AuthResponse> getAccessTokenFromApi(String refreshToken) {
+    final query = {
+      'refreshToken': refreshToken
+    };
+
+    return _getResponse(AuthApiRoutes.GET_ACCESS_TOKEN, query);
+  }
+
   Future<AuthResponse> _getResponse(String path, Map<String, dynamic> query) async {
     Uri uri = Uri.https(authEnvironment.authApiHost(), path, query);
     debugPrint("Uri: ${uri.toString()}");
