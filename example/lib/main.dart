@@ -123,6 +123,13 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: const Text('Get Access token'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                YAuthDi(ExampleAuthEnvironment()).getSignOutUseCase().execute();
+                debugPrint("Sign out");
+              },
+              child: const Text('Sign Out'),
+            ),
           ],
         ),
       ),
