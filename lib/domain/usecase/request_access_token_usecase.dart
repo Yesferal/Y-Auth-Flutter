@@ -10,7 +10,7 @@ class RequestAccessTokenUseCase {
 
   Future<AuthResponse> execute(String refreshToken) async {
     if (refreshToken.isEmpty) {
-      return ErrorResponse("Invalid refresh Token", "Please enter a code");
+      return ErrorResponse(400, "Invalid refresh Token", "Please enter a code");
     }
 
     var authResponse = await _remoteStorageDatasource.getAccessTokenFromApi(refreshToken);

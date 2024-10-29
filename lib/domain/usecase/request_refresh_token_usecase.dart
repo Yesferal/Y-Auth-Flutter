@@ -15,7 +15,7 @@ class RequestRefreshTokenUseCase {
 
   Future<AuthResponse> execute(String appPackageName, String authCode, String deviceId, String email) async {
     if (authCode.isEmpty) {
-      return ErrorResponse("Invalid code", "Please enter a code");
+      return ErrorResponse(400, "Invalid code", "Please enter a code");
     }
 
     var authResponse = await _remoteStorageDatasource.getRefreshTokenFromApi(appPackageName, authCode, deviceId, email);

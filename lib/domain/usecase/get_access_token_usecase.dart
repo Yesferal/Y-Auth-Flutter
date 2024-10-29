@@ -29,10 +29,8 @@ class GetAccessTokenUseCase {
           await _requestAccessTokenUseCase.execute(refreshToken);
       switch (authResponse) {
         case ErrorResponse():
-
-          /// TODO: Check http error code
-          /// If refresh token was removed from server, then the user has to be logged out.
-          if (false /*CODE == 401*/) {
+          int statusCode = authResponse.statusCode;
+          if (statusCode == 401) {
             _signOutUseCase.execute();
             onErrorRefreshTokenExpired("Refresh Token has expired");
             return;

@@ -9,8 +9,9 @@ class SuccessResponse<T> extends AuthResponse {
 }
 
 class ErrorResponse extends AuthResponse {
+  final int statusCode;
   final String message;
   final String displayMessage;
 
-  ErrorResponse(this.message, this.displayMessage);
+  ErrorResponse(this.statusCode, this.message, this.displayMessage);
 }

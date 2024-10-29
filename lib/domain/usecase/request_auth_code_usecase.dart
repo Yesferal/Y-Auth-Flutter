@@ -14,7 +14,7 @@ class RequestAuthCodeUseCase {
 
     if (!authEmailValidator.validate(email)) {
       const message = "Invalid email";
-      return ErrorResponse(message, "Please verify that your email address is correct");
+      return ErrorResponse(400, message, "Please verify that your email address is correct");
     }
 
     final AuthResponse response = await this.remoteStorageDatasource.getAuthCodeFromApi(appColor, appName, email);

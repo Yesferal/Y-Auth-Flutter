@@ -55,15 +55,15 @@ class HttpDataSource extends RemoteStorageDatasource {
       /// TODO: Handle HTTP error code
       if (response.statusCode != 200) {
         MessageModel messageModel = MessageModel.fromJson(json.decode(response.body));
-        var errorMessage = "Get Uri Exception: (${response.statusCode}) ${messageModel.message}. ${uri.toString()}";
+        var errorMessage = "Get Uri Exception: (${response.statusCode}) ${messageModel.message}. Uri: ${uri.toString()}";
         debugPrint(errorMessage);
-        return ErrorResponse(errorMessage, messageModel.message ?? "");
+        return ErrorResponse(response.statusCode, errorMessage, messageModel.message ?? "");
       }
       return SuccessResponse(response.body);
     } catch (e) {
       var errorMessage = "Get Uri Exception($e) : ${uri.toString()}";
       debugPrint(errorMessage);
-      return ErrorResponse(errorMessage, "Try again");
+      return ErrorResponse(400, errorMessage, "Try again");
     }
   }
 }

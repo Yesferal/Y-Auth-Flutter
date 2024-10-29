@@ -142,7 +142,6 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 YAuthDi(ExampleAuthEnvironment()).getSignOutUseCase().execute();
                 _syncSession();
-                debugPrint("Sign out");
               },
               child: const Text('Sign Out'),
             ),
