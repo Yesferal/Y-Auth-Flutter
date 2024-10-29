@@ -5,4 +5,6 @@ abstract class PreferencesDatasource {
   void saveRefreshToken(String token);
   Future<String> getAccessToken();
   void saveAccessToken(String token);
+  Future<String> getSession();
+  void saveSession(String session);
 }

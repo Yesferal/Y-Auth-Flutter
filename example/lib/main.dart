@@ -1,6 +1,7 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 import 'package:example/example_auth_environment.dart';
 import 'package:flutter/material.dart';
+import 'package:y_auth/domain/model/session_model.dart';
 import 'package:y_auth/y_auth.dart';
 
 void main() {
@@ -60,6 +61,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  SessionModel? _sessionModel = null;
+
+  @override
+  void initState() {
+    _syncSession();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -97,6 +106,12 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text(
+              "Email: ${_sessionModel?.email ?? "-"}"
+            ),
+            Text(
+                "Display Name: ${_sessionModel?.displayName ?? "-"}"
+            ),
             ElevatedButton(
               onPressed: () {
                 _navigateToLoginScreen();
@@ -126,6 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: () {
                 YAuthDi(ExampleAuthEnvironment()).getSignOutUseCase().execute();
+                _syncSession();
                 debugPrint("Sign out");
               },
               child: const Text('Sign Out'),
@@ -143,6 +159,16 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context) => YAuthDi(ExampleAuthEnvironment())
               .getRequestAuthCodeScreen(
                   "#3F35A5", "Y-Auth-ExampleApp", "com.yesferal.auth.example")),
-    );
+    ).then((_){
+      _syncSession();
+    });
+  }
+
+  _syncSession() async {
+    SessionModel? sessionModel = await YAuthDi(ExampleAuthEnvironment()).getCurrentSessionUseCase().execute();
+
+    setState(() {
+      _sessionModel = sessionModel;
+    });
   }
 }

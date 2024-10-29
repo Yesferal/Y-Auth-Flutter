@@ -5,6 +5,7 @@ import 'package:y_auth/domain/abstract/auth_environment.dart';
 import 'package:y_auth/domain/abstract/auth_remote_storage_datasource.dart';
 import 'package:y_auth/domain/abstract/preferences_datasource.dart';
 import 'package:y_auth/domain/usecase/get_access_token_usecase.dart';
+import 'package:y_auth/domain/usecase/get_current_session_usecase.dart';
 import 'package:y_auth/domain/usecase/request_access_token_usecase.dart';
 import 'package:y_auth/domain/usecase/sign_out_usecase.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
@@ -29,7 +30,7 @@ class YAuthDi {
   }
 
   GetAccessTokenUseCase getAccessToken() {
-    return GetAccessTokenUseCase(_getPreferencesDatasource(), _getRequestAccessTokenUseCase());
+    return GetAccessTokenUseCase(_getPreferencesDatasource(), _getRequestAccessTokenUseCase(), getSignOutUseCase());
   }
 
   Widget getRequestAuthCodeScreen(String color, String appName, String package) {
@@ -38,5 +39,9 @@ class YAuthDi {
 
   SignOutUseCase getSignOutUseCase() {
     return SignOutUseCase(_getPreferencesDatasource());
+  }
+
+  GetCurrentSessionUseCase getCurrentSessionUseCase() {
+    return GetCurrentSessionUseCase(_getPreferencesDatasource());
   }
 }

@@ -6,13 +6,15 @@ import 'package:y_auth/domain/abstract/preferences_datasource.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/model/token_model.dart';
 import 'package:y_auth/domain/usecase/request_access_token_usecase.dart';
+import 'package:y_auth/domain/usecase/sign_out_usecase.dart';
 
 class GetAccessTokenUseCase {
   PreferencesDatasource _preferencesDatasource;
   RequestAccessTokenUseCase _requestAccessTokenUseCase;
+  SignOutUseCase _signOutUseCase;
 
-  GetAccessTokenUseCase(
-      this._preferencesDatasource, this._requestAccessTokenUseCase);
+  GetAccessTokenUseCase(this._preferencesDatasource,
+      this._requestAccessTokenUseCase, this._signOutUseCase);
 
   void execute(Function(TokenModel? tokenModel) onComplete,
       Function(String) onErrorRefreshTokenExpired) async {
@@ -31,7 +33,7 @@ class GetAccessTokenUseCase {
           /// TODO: Check http error code
           /// If refresh token was removed from server, then the user has to be logged out.
           if (false /*CODE == 401*/) {
-            _preferencesDatasource.saveRefreshToken("");
+            _signOutUseCase.execute();
             onErrorRefreshTokenExpired("Refresh Token has expired");
             return;
           }

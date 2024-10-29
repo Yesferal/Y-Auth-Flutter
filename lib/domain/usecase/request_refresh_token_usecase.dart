@@ -29,6 +29,8 @@ class RequestRefreshTokenUseCase {
         if (tokenModel.expressToken?.refreshToken != null) {
           _preferencesDatasource.saveRefreshToken(tokenModel.expressToken?.refreshToken ?? "");
         }
+        /// FIXME: TODO: Get email and display name as json from server
+        _preferencesDatasource.saveSession('{"email":"${email}"}');
 
         break;
     }

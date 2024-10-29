@@ -10,5 +10,6 @@ class SignOutUseCase {
   void execute() async {
     _preferencesDatasource.saveRefreshToken("");
     _preferencesDatasource.saveAccessToken("");
+    _preferencesDatasource.saveSession("");
   }
 }
