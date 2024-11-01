@@ -7,6 +7,7 @@ import 'package:y_auth/domain/usecase/request_refresh_token_usecase.dart';
 import 'package:y_auth/framework/device_info/device_info_plus_datasource.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
 import 'package:y_auth/framework/preferences/shared_preferences_datasource.dart';
+import 'package:y_auth/presentation/widget/button_label_widget.dart';
 
 class RequestAuthTokenScreen extends StatefulWidget {
   final AuthEnvironment authEnvironment;
@@ -33,6 +34,8 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
   final _myController = TextEditingController();
 
   String? _errorMessage;
+
+  bool _isButtonEnabled = true;
 
   String? deviceModel;
 
@@ -86,7 +89,10 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: _isButtonEnabled ? () async {
+                setState(() {
+                  _isButtonEnabled = false;
+                });
                 debugPrint("Device Info: "+ (deviceModel ?? ""));
                 var response = await RequestRefreshTokenUseCase(HttpDataSource(widget.authEnvironment), SharedPreferenceDataSource()).execute(widget.appPackageName, _myController.text, deviceModel ?? "", widget.email);
 
@@ -94,6 +100,7 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
                   case ErrorResponse():
                     debugPrint("Error message: ${response.message}");
                     setState(() {
+                      _isButtonEnabled = true;
                       _errorMessage = response.displayMessage;
                     });
                     break;
@@ -108,12 +115,13 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
                     }
 
                     setState(() {
+                      _isButtonEnabled = true;
                       _errorMessage = null;
                     });
                     break;
                 }
-              },
-              child: const Text('Continue'),
+              } : null,
+              child: getLabelButton(_isButtonEnabled),
             ),
             Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),

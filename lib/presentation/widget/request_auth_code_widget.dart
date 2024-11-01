@@ -5,6 +5,7 @@ import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
 import 'package:y_auth/framework/validator/auth_email_validator_third_party.dart';
+import 'package:y_auth/presentation/widget/button_label_widget.dart';
 import 'package:y_auth/presentation/widget/request_auth_token_widget.dart';
 
 class RequestAuthCodeScreen extends StatefulWidget {
@@ -13,7 +14,9 @@ class RequestAuthCodeScreen extends StatefulWidget {
   final String appName;
   final String appPackageName;
 
-  const RequestAuthCodeScreen(this.authEnvironment, this.appColor, this.appName, this.appPackageName, {super.key});
+  const RequestAuthCodeScreen(
+      this.authEnvironment, this.appColor, this.appName, this.appPackageName,
+      {super.key});
 
   @override
   State<RequestAuthCodeScreen> createState() {
@@ -22,10 +25,11 @@ class RequestAuthCodeScreen extends StatefulWidget {
 }
 
 class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
-
   final _myController = TextEditingController();
 
   String? _errorMessage;
+
+  bool _isButtonEnabled = true;
 
   @override
   void dispose() {
@@ -57,33 +61,47 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () async {
-                var emailInput = _myController.text;
-                var response = await RequestAuthCodeUseCase(AuthEmailValidatorImpl(), HttpDataSource(widget.authEnvironment)).execute(widget.appColor, widget.appName, emailInput);
+                onPressed: _isButtonEnabled
+                    ? () async {
+                        setState(() {
+                          _isButtonEnabled = false;
+                        });
+                        var emailInput = _myController.text;
+                        var response = await RequestAuthCodeUseCase(
+                                AuthEmailValidatorImpl(),
+                                HttpDataSource(widget.authEnvironment))
+                            .execute(
+                                widget.appColor, widget.appName, emailInput);
 
-                switch (response) {
-                  case ErrorResponse():
-                    debugPrint("Error message: ${response.message}");
-                    setState(() {
-                      _errorMessage = response.displayMessage;
-                    });
-                    break;
-                  case SuccessResponse():
-                    if (context.mounted) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RequestAuthTokenScreen(widget.authEnvironment, widget.appPackageName, emailInput)),
-                      );
-                    }
-                    setState(() {
-                      _errorMessage = null;
-                    });
-                    break;
-                }
-              },
-              child: const Text('Continue'),
-            ),
+                        switch (response) {
+                          case ErrorResponse():
+                            debugPrint("Error message: ${response.message}");
+                            setState(() {
+                              _isButtonEnabled = true;
+                              _errorMessage = response.displayMessage;
+                            });
+                            break;
+                          case SuccessResponse():
+                            if (context.mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        RequestAuthTokenScreen(
+                                            widget.authEnvironment,
+                                            widget.appPackageName,
+                                            emailInput)),
+                              );
+                            }
+                            setState(() {
+                              _isButtonEnabled = true;
+                              _errorMessage = null;
+                            });
+                            break;
+                        }
+                      }
+                    : null,
+                child: getLabelButton(_isButtonEnabled)),
           ],
         ),
       ),
