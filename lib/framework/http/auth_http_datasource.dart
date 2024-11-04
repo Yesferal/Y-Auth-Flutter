@@ -63,7 +63,7 @@ class HttpDataSource extends RemoteStorageDatasource {
     } catch (e) {
       var errorMessage = "Get Uri Exception($e) : ${uri.toString()}";
       debugPrint(errorMessage);
-      return ErrorResponse(400, errorMessage, "Try again");
+      return ErrorResponse(400, errorMessage, "Please try again");
     }
   }
 }
