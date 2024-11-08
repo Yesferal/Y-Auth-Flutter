@@ -2,11 +2,13 @@
 
 class MessageModel {
   String? message;
+  String? displayMessage;
 
   MessageModel.fromJson(Map? json)
-      : message = json?['message'];
+      : message = json?['message'],
+        displayMessage = json?['displayMessage'];
 
   Map toJson() {
-    return {'message': message};
+    return {'message': message, 'displayMessage': displayMessage};
   }
 }
