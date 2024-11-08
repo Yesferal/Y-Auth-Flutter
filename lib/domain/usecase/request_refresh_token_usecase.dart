@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:y_auth/domain/abstract/auth_remote_storage_datasource.dart';
 import 'package:y_auth/domain/abstract/preferences_datasource.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
+import 'package:y_auth/domain/model/session_model.dart';
 import 'package:y_auth/domain/model/token_model.dart';
 
 class RequestRefreshTokenUseCase {
@@ -29,8 +30,8 @@ class RequestRefreshTokenUseCase {
         if (tokenModel.expressToken?.refreshToken != null) {
           _preferencesDatasource.saveRefreshToken(tokenModel.expressToken?.refreshToken ?? "");
         }
-        /// FIXME: TODO: Get email and display name as json from server
-        _preferencesDatasource.saveSession('{"email":"${email}"}');
+        SessionModel sessionModel = SessionModel.fromJson(json.decode(authResponse.body));
+        _preferencesDatasource.saveSession(jsonEncode(sessionModel.toJson()));
 
         break;
     }
