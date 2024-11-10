@@ -20,17 +20,20 @@ class ExpressToken {
   String? refreshToken;
   String? accessToken;
   int? expiredIn;
+  int? requestedAt;
 
   ExpressToken.fromJson(Map? json)
       : refreshToken = json?['refreshToken'],
         expiredIn = json?['expiredIn'],
-        accessToken = json?['accessToken'];
+        accessToken = json?['accessToken'],
+        requestedAt = DateTime.now().millisecondsSinceEpoch;
 
   Map toJson() {
     return {
       'refreshToken': refreshToken,
       'expiredIn': expiredIn,
-      'accessToken': accessToken
+      'accessToken': accessToken,
+      'requestedAt': requestedAt
     };
   }
 }

@@ -12,16 +12,42 @@ class GetAccessTokenUseCase {
   PreferencesDatasource _preferencesDatasource;
   RequestAccessTokenUseCase _requestAccessTokenUseCase;
   SignOutUseCase _signOutUseCase;
+  TokenModel? tokenModel;
+
+  /// This Delta is used to avoid errors.
+  /// The expiration time will be precise.
+  /// However, we're not accounting for server response delay,
+  /// which could range from 1 to any seconds.
+  /// We believe that 60 seconds is a good estimate.
+  final REQUEST_DELTA_IN_MILLISECONDS = 60 /* Sec */ * 1000;
 
   GetAccessTokenUseCase(this._preferencesDatasource,
       this._requestAccessTokenUseCase, this._signOutUseCase);
 
   void execute(Function(TokenModel? tokenModel) onComplete,
-      Function(String) onErrorRefreshTokenExpired) async {
-    /// TODO: Validate expiration before request
-    /// to improve efficiency
-    /// if (isNotExpire) return current-local-storage value
-    TokenModel? tokenModel;
+      Function(String) onErrorRefreshTokenExpired,
+      {forceNewToken = false}) async {
+    int? expiredIn = tokenModel?.expressToken?.expiredIn;
+    int? requestedAt = tokenModel?.expressToken?.requestedAt;
+    if (!forceNewToken && expiredIn != null && requestedAt != null) {
+      int nowInMilliseconds = DateTime.now().millisecondsSinceEpoch;
+      int lastTokenRequestPlusDelta =
+          requestedAt + REQUEST_DELTA_IN_MILLISECONDS;
+      bool tokenHasExpired =
+          expiredIn < (nowInMilliseconds - lastTokenRequestPlusDelta);
+      if (!tokenHasExpired) {
+        debugPrint(
+            "Y-Auth: GetAccessTokenUseCase:: Token is still valid ${tokenModel}");
+        onComplete(tokenModel);
+        return;
+      } else {
+        debugPrint("Y-Auth: GetAccessTokenUseCase: Access Token has expired");
+      }
+    } else {
+      debugPrint(
+          "Y-Auth: GetAccessTokenUseCase: First Launch or Access Token has been force to update");
+    }
+
     String refreshToken = await _preferencesDatasource.getRefreshToken();
 
     if (refreshToken.isNotEmpty) {

@@ -14,6 +14,7 @@ import 'package:y_auth/presentation/widget/request_auth_code_widget.dart';
 
 class YAuthDi {
   AuthEnvironment _authEnvironment;
+  GetAccessTokenUseCase? getAccessTokenUseCase;
 
   YAuthDi(this._authEnvironment);
 
@@ -30,10 +31,15 @@ class YAuthDi {
   }
 
   GetAccessTokenUseCase getAccessToken() {
-    return GetAccessTokenUseCase(_getPreferencesDatasource(), _getRequestAccessTokenUseCase(), getSignOutUseCase());
+    GetAccessTokenUseCase useCase = getAccessTokenUseCase ??
+        GetAccessTokenUseCase(_getPreferencesDatasource(),
+            _getRequestAccessTokenUseCase(), getSignOutUseCase());
+    getAccessTokenUseCase = useCase;
+    return useCase;
   }
 
-  Widget getRequestAuthCodeScreen(String color, String appName, String package) {
+  Widget getRequestAuthCodeScreen(
+      String color, String appName, String package) {
     return RequestAuthCodeScreen(_authEnvironment, color, appName, package);
   }
 

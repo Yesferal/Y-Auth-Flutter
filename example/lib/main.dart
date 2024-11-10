@@ -2,6 +2,7 @@
 import 'package:example/example_auth_environment.dart';
 import 'package:flutter/material.dart';
 import 'package:y_auth/domain/model/session_model.dart';
+import 'package:y_auth/domain/model/token_model.dart';
 import 'package:y_auth/y_auth.dart';
 
 void main() {
@@ -62,9 +63,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   SessionModel? _sessionModel = null;
+  YAuthDi? yAuthDi;
 
   @override
   void initState() {
+    yAuthDi = YAuthDi(ExampleAuthEnvironment());
     _syncSession();
     super.initState();
   }
@@ -106,12 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "Email: ${_sessionModel?.email ?? "-"}"
-            ),
-            Text(
-                "Display Name: ${_sessionModel?.displayName ?? "-"}"
-            ),
+            Text("Email: ${_sessionModel?.email ?? "-"}"),
+            Text("Display Name: ${_sessionModel?.displayName ?? "-"}"),
             ElevatedButton(
               onPressed: () {
                 _navigateToLoginScreen();
@@ -120,23 +119,19 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                YAuthDi(ExampleAuthEnvironment()).getAccessToken().execute(
-                    (token) {
-                  if (token != null) {
-                    debugPrint(
-                        "Access Token: ${token.expressToken?.accessToken}");
-                    debugPrint(
-                        "Refresh Token: ${token.expressToken?.refreshToken}");
-                  } else {
-                    debugPrint("Token is null");
-                    _navigateToLoginScreen();
-                  }
-                }, (message) {
-                  debugPrint("Error Message: ${message}");
-                  _navigateToLoginScreen();
-                });
+                yAuthDi
+                    ?.getAccessToken()
+                    .execute(_getAccessTokenSuccess, _getAccessTokenError);
               },
-              child: const Text('Get Access token'),
+              child: const Text('Get current or new Access token'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                yAuthDi
+                    ?.getAccessToken()
+                    .execute(_getAccessTokenSuccess, _getAccessTokenError, forceNewToken: true);
+              },
+              child: const Text('Get always a new Access token'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -151,6 +146,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  _getAccessTokenSuccess(TokenModel? tokenModel) {
+    if (tokenModel != null) {
+      debugPrint("Access Token: ${tokenModel.expressToken?.accessToken}");
+      debugPrint("Refresh Token: ${tokenModel.expressToken?.refreshToken}");
+    } else {
+      debugPrint("Token is null");
+      _navigateToLoginScreen();
+    }
+  }
+
+  _getAccessTokenError(String message) {
+    debugPrint("Error Message: ${message}");
+    _navigateToLoginScreen();
+  }
+
   _navigateToLoginScreen() {
     Navigator.push(
       context,
@@ -158,13 +168,15 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context) => YAuthDi(ExampleAuthEnvironment())
               .getRequestAuthCodeScreen(
                   "#3F35A5", "Y-Auth-ExampleApp", "com.yesferal.auth.example")),
-    ).then((_){
+    ).then((_) {
       _syncSession();
     });
   }
 
   _syncSession() async {
-    SessionModel? sessionModel = await YAuthDi(ExampleAuthEnvironment()).getCurrentSessionUseCase().execute();
+    SessionModel? sessionModel = await yAuthDi
+        ?.getCurrentSessionUseCase()
+        .execute();
 
     setState(() {
       _sessionModel = sessionModel;
