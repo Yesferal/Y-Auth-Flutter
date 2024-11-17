@@ -86,11 +86,13 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        RequestAuthTokenScreen(
-                                            widget.authEnvironment,
-                                            widget.appPackageName,
-                                            emailInput)),
+                                    builder: (context) => RequestAuthTokenScreen(
+                                        widget.authEnvironment,
+                                        widget.appPackageName,
+                                        widget.appColor,
+                                        widget.appName,
+                                        emailInput,
+                                        "Once you enter the code we sent to your email, you'll be all toggled in")),
                               );
                             }
                             setState(() {

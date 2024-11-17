@@ -3,18 +3,25 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:y_auth/domain/abstract/auth_environment.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
+import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
 import 'package:y_auth/domain/usecase/request_refresh_token_usecase.dart';
 import 'package:y_auth/framework/device_info/device_info_plus_datasource.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
 import 'package:y_auth/framework/preferences/shared_preferences_datasource.dart';
+import 'package:y_auth/framework/validator/auth_email_validator_third_party.dart';
 import 'package:y_auth/presentation/widget/button_label_widget.dart';
 
 class RequestAuthTokenScreen extends StatefulWidget {
   final AuthEnvironment authEnvironment;
   final String appPackageName;
+  final String appColor;
+  final String appName;
   final String email;
+  final String message;
 
-  const RequestAuthTokenScreen(this.authEnvironment, this.appPackageName, this.email, {super.key});
+  const RequestAuthTokenScreen(this.authEnvironment, this.appPackageName,
+      this.appColor, this.appName, this.email, this.message,
+      {super.key});
 
   @override
   State<RequestAuthTokenScreen> createState() {
@@ -37,6 +44,8 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
 
   bool _isButtonEnabled = true;
 
+  bool _isSendingACode = false;
+
   String? deviceModel;
 
   @override
@@ -55,17 +64,43 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var resentCodeWidget = (_currentSeconds >= _timerMaxSeconds)
-        ? TextButton(
-            onPressed: () {
+    var resentCodeWidget;
+    if (_isSendingACode) {
+      resentCodeWidget = TextButton(
+          onPressed: null,
+          child: Text(
+              "Resending a new code"));
+    } else if (_currentSeconds >= _timerMaxSeconds) {
+      resentCodeWidget = TextButton(
+        onPressed: () async {
+          setState(() {
+            _isSendingACode = true;
+          });
+          var response = await RequestAuthCodeUseCase(
+              AuthEmailValidatorImpl(),
+              HttpDataSource(widget.authEnvironment))
+              .execute(widget.appColor, widget.appName, widget.email);
+
+          switch (response) {
+            case ErrorResponse():
+              debugPrint("Error message: ${response.message}");
+              setState(() {
+                _isSendingACode = false;
+              });
+              break;
+            case SuccessResponse():
               _startTimeout();
-            },
-            child: const Text("Resend a code"),
-          )
-        : TextButton(
-            onPressed: null,
-            child: Text(
-                "Resent in ${_timerMaxSeconds - _currentSeconds} seconds"));
+              break;
+          }
+        },
+        child: const Text("Resend a code"),
+      );
+    } else {
+      resentCodeWidget = TextButton(
+          onPressed: null,
+          child: Text(
+              "Resend in ${_timerMaxSeconds - _currentSeconds} seconds"));
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text('Finish logging in')),
@@ -74,8 +109,7 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-                "Once you enter the code we sent to your email, you'll be all toggled in"),
+            Text(widget.message),
             const SizedBox(height: 24),
             const Text("Code", style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
@@ -89,38 +123,44 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _isButtonEnabled ? () async {
-                setState(() {
-                  _isButtonEnabled = false;
-                });
-                debugPrint("Device Info: "+ (deviceModel ?? ""));
-                var response = await RequestRefreshTokenUseCase(HttpDataSource(widget.authEnvironment), SharedPreferenceDataSource()).execute(widget.appPackageName, _myController.text, deviceModel ?? "", widget.email);
+              onPressed: _isButtonEnabled
+                  ? () async {
+                      setState(() {
+                        _isButtonEnabled = false;
+                      });
+                      debugPrint("Device Info: " + (deviceModel ?? ""));
+                      var response = await RequestRefreshTokenUseCase(
+                              HttpDataSource(widget.authEnvironment),
+                              SharedPreferenceDataSource())
+                          .execute(widget.appPackageName, _myController.text,
+                              deviceModel ?? "", widget.email);
 
-                switch (response) {
-                  case ErrorResponse():
-                    debugPrint("Error message: ${response.message}");
-                    setState(() {
-                      _isButtonEnabled = true;
-                      _errorMessage = response.displayMessage;
-                    });
-                    break;
+                      switch (response) {
+                        case ErrorResponse():
+                          debugPrint("Error message: ${response.message}");
+                          setState(() {
+                            _isButtonEnabled = true;
+                            _errorMessage = response.displayMessage;
+                          });
+                          break;
 
-                  case SuccessResponse():
-                    if (context.mounted) {
-                      Navigator.of(context)
-                        ..pop()
-                        ..pop();
-                      // TODO: Fix this. Use Route with Name instead
-                      //Navigator.popUntil(context, ModalRoute.withName('/Home'));
+                        case SuccessResponse():
+                          if (context.mounted) {
+                            Navigator.of(context)
+                              ..pop()
+                              ..pop();
+                            // TODO: Fix this. Use Route with Name instead
+                            //Navigator.popUntil(context, ModalRoute.withName('/Home'));
+                          }
+
+                          setState(() {
+                            _isButtonEnabled = true;
+                            _errorMessage = null;
+                          });
+                          break;
+                      }
                     }
-
-                    setState(() {
-                      _isButtonEnabled = true;
-                      _errorMessage = null;
-                    });
-                    break;
-                }
-              } : null,
+                  : null,
               child: getLabelButton(_isButtonEnabled),
             ),
             Padding(
@@ -142,6 +182,7 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
     _timer = Timer.periodic(_interval, (timer) {
       setState(() {
         debugPrint("Tick time: ${timer.tick}");
+        _isSendingACode = false;
         _currentSeconds = timer.tick;
         if (timer.tick >= _timerMaxSeconds) {
           timer.cancel();
