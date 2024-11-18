@@ -1,7 +1,11 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
+
+
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:y_auth/domain/abstract/auth_environment.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
+import 'package:y_auth/domain/model/message_model.dart';
 import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
 import 'package:y_auth/framework/validator/auth_email_validator_third_party.dart';
@@ -82,18 +86,25 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
                             });
                             break;
                           case SuccessResponse():
-                            if (context.mounted) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RequestAuthTokenScreen(
-                                        widget.authEnvironment,
-                                        widget.appPackageName,
-                                        widget.appColor,
-                                        widget.appName,
-                                        emailInput,
-                                        "Once you enter the code we sent to your email, you'll be all toggled in")),
-                              );
+                            try {
+                              MessageModel messageModel =
+                                  MessageModel.fromJson(json.decode(response.body));
+                              if (context.mounted) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            RequestAuthTokenScreen(
+                                                widget.authEnvironment,
+                                                widget.appPackageName,
+                                                widget.appColor,
+                                                widget.appName,
+                                                emailInput,
+                                                messageModel.displayMessage ??
+                                                    "Once you enter the code we sent to your email, you'll be all toggled in")));
+                              }
+                            } catch (e) {
+                              debugPrint("Error message: ${e}");
                             }
                             setState(() {
                               _isButtonEnabled = true;
