@@ -26,12 +26,19 @@ class RequestRefreshTokenUseCase {
 
       case SuccessResponse():
         debugPrint("Body: ${authResponse.body}");
-        TokenModel tokenModel = TokenModel.fromJson(json.decode(authResponse.body));
-        if (tokenModel.expressToken?.refreshToken != null) {
-          _preferencesDatasource.saveRefreshToken(tokenModel.expressToken?.refreshToken ?? "");
+        try {
+          TokenModel tokenModel = TokenModel.fromJson(
+              json.decode(authResponse.body));
+          if (tokenModel.expressToken?.refreshToken != null) {
+            _preferencesDatasource.saveRefreshToken(
+                tokenModel.expressToken?.refreshToken ?? "");
+          }
+          SessionModel sessionModel = SessionModel.fromJson(
+              json.decode(authResponse.body));
+          _preferencesDatasource.saveSession(jsonEncode(sessionModel.toJson()));
+        } catch (e) {
+          debugPrint("RequestRefreshTokenUseCase: Token Model exception: ${e}");
         }
-        SessionModel sessionModel = SessionModel.fromJson(json.decode(authResponse.body));
-        _preferencesDatasource.saveSession(jsonEncode(sessionModel.toJson()));
 
         break;
     }
