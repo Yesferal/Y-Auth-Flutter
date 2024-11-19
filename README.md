@@ -44,6 +44,11 @@ First, create a verified publisher profile.
 
 After that, update the following files `README.md`, `CHANGELOG.md` & `pubspec.yaml`
 
+If you want to add commits/changes to `CHANGELOG.md`, then you can use the following pretty format
+```
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' --abbrev-commit
+```
+
 Use the dart command to publish the package for the first time 
 or to update it to a new version.
 ```
