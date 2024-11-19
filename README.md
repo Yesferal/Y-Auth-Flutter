@@ -32,3 +32,22 @@ export 'presentation/widget/passwordless_widget.dart';
 ```
 
 You can now use `passwordless_widget.dart` in the example app.
+
+### Run the Example App
+Use the flutter command to run the example app
+```
+flutter run
+```
+
+### Publish 
+First, create a verified publisher profile.
+
+After that, update the following files `README.md`, `CHANGELOG.md` & `pubspec.yaml`
+
+Use the dart command to publish the package for the first time 
+or to update it to a new version.
+```
+dart pub publish
+```
+Reference: https://dart.dev/tools/pub/publishing
+
