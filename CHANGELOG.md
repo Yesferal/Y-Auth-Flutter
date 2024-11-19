@@ -1,6 +1,22 @@
+## 1.0.2 -- In Progress
+
+* 53c4653 - Fix: Add try/catch when we map a json <Yesferal Cueva>
+* a28e8b9 - Get the message from server <Yesferal Cueva>
+* 692cc33 - Resend code if user request a second one <Yesferal Cueva>
+* b46763c - Check expiredIn value before request new token <Yesferal Cueva>
+* 9843fdf - Get session/email from server side <Yesferal Cueva>
+* 3e6e16b - Show displayMessage instead <Yesferal Cueva>
+* efb87ce - Fix error message <Yesferal Cueva>
+* 9296b73 - Add CircularProgressIndicator <Yesferal Cueva>
+* 7488d88 - Validate 401 error status code <Yesferal Cueva>
+* c81646c - Create GetCurrentSession Usecase <Yesferal Cueva>
+* 46952b5 - Create & Expose SignOut Usecase <Yesferal Cueva>
+* 65251d8 - Create DI & GetAccessToken UC <Yesferal Cueva>
+* 55e0077 - Save Tokens in SharedPreferences <Yesferal Cueva>
+
 ## 1.0.1
 
-* 5d13e4e - (HEAD -> main) Get Device Id / Device Model <Yesferal Cueva>
+* 5d13e4e - Get Device Id / Device Model <Yesferal Cueva>
 
 ## 1.0.0
 
