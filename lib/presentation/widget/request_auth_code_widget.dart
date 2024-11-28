@@ -8,6 +8,7 @@ import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/model/message_model.dart';
 import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
+import 'package:y_auth/framework/logger/y_log.dart';
 import 'package:y_auth/framework/validator/auth_email_validator_third_party.dart';
 import 'package:y_auth/presentation/widget/button_label_widget.dart';
 import 'package:y_auth/presentation/widget/request_auth_token_widget.dart';
@@ -79,7 +80,7 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
 
                         switch (response) {
                           case ErrorResponse():
-                            debugPrint("Error message: ${response.message}");
+                            YLog.d("Error message: ${response.message}");
                             setState(() {
                               _isButtonEnabled = true;
                               _errorMessage = response.displayMessage;
@@ -104,7 +105,7 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
                                                     "Once you enter the code we sent to your email, you'll be all toggled in")));
                               }
                             } catch (e) {
-                              debugPrint("Error message: ${e}");
+                              YLog.d("Error message: ${e}");
                             }
                             setState(() {
                               _isButtonEnabled = true;

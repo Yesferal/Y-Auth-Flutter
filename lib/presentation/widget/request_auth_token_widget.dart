@@ -7,6 +7,7 @@ import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
 import 'package:y_auth/domain/usecase/request_refresh_token_usecase.dart';
 import 'package:y_auth/framework/device_info/device_info_plus_datasource.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
+import 'package:y_auth/framework/logger/y_log.dart';
 import 'package:y_auth/framework/preferences/shared_preferences_datasource.dart';
 import 'package:y_auth/framework/validator/auth_email_validator_third_party.dart';
 import 'package:y_auth/presentation/widget/button_label_widget.dart';
@@ -83,7 +84,7 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
 
           switch (response) {
             case ErrorResponse():
-              debugPrint("Error message: ${response.message}");
+              YLog.d("Error message: ${response.message}");
               setState(() {
                 _isSendingACode = false;
               });
@@ -128,7 +129,7 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
                       setState(() {
                         _isButtonEnabled = false;
                       });
-                      debugPrint("Device Info: " + (deviceModel ?? ""));
+                      YLog.d("Device Info: " + (deviceModel ?? ""));
                       var response = await RequestRefreshTokenUseCase(
                               HttpDataSource(widget.authEnvironment),
                               SharedPreferenceDataSource())
@@ -137,7 +138,7 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
 
                       switch (response) {
                         case ErrorResponse():
-                          debugPrint("Error message: ${response.message}");
+                          YLog.d("Error message: ${response.message}");
                           setState(() {
                             _isButtonEnabled = true;
                             _errorMessage = response.displayMessage;
@@ -181,7 +182,7 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
   void _startTimeout() {
     _timer = Timer.periodic(_interval, (timer) {
       setState(() {
-        debugPrint("Tick time: ${timer.tick}");
+        YLog.d("Tick time: ${timer.tick}");
         _isSendingACode = false;
         _currentSeconds = timer.tick;
         if (timer.tick >= _timerMaxSeconds) {

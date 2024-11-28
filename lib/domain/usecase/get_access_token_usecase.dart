@@ -7,6 +7,7 @@ import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/model/token_model.dart';
 import 'package:y_auth/domain/usecase/request_access_token_usecase.dart';
 import 'package:y_auth/domain/usecase/sign_out_usecase.dart';
+import 'package:y_auth/framework/logger/y_log.dart';
 
 class GetAccessTokenUseCase {
   PreferencesDatasource _preferencesDatasource;
@@ -36,15 +37,15 @@ class GetAccessTokenUseCase {
       bool tokenHasExpired =
           expiredIn < (nowInMilliseconds - lastTokenRequestPlusDelta);
       if (!tokenHasExpired) {
-        debugPrint(
+        YLog.d(
             "Y-Auth: GetAccessTokenUseCase:: Token is still valid ${tokenModel}");
         onComplete(tokenModel);
         return;
       } else {
-        debugPrint("Y-Auth: GetAccessTokenUseCase: Access Token has expired");
+        YLog.d("Y-Auth: GetAccessTokenUseCase: Access Token has expired");
       }
     } else {
-      debugPrint(
+      YLog.d(
           "Y-Auth: GetAccessTokenUseCase: First Launch or Access Token has been force to update");
     }
 
@@ -67,7 +68,7 @@ class GetAccessTokenUseCase {
           try {
             tokenModel = TokenModel.fromJson(json.decode(authResponse.body));
           } catch (e) {
-            debugPrint("GetNewAccessToken: Token Model exception: ${e}");
+            YLog.d("GetNewAccessToken: Token Model exception: ${e}");
           }
           break;
       }

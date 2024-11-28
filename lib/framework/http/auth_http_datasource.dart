@@ -8,6 +8,7 @@ import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/model/message_model.dart';
 import 'package:y_auth/framework/http/auth_api_routes.dart';
 import 'package:y_auth/domain/abstract/auth_environment.dart';
+import 'package:y_auth/framework/logger/y_log.dart';
 
 class HttpDataSource extends RemoteStorageDatasource {
   AuthEnvironment authEnvironment;
@@ -48,7 +49,7 @@ class HttpDataSource extends RemoteStorageDatasource {
 
   Future<AuthResponse> _getResponse(String path, Map<String, dynamic> query) async {
     Uri uri = Uri.https(authEnvironment.authApiHost(), path, query);
-    debugPrint("Uri: ${uri.toString()}");
+    YLog.d("Uri: ${uri.toString()}");
     try {
       Response? response = await get(uri, headers: authEnvironment.authHeaders());
 
@@ -56,13 +57,13 @@ class HttpDataSource extends RemoteStorageDatasource {
       if (response.statusCode != 200) {
         MessageModel messageModel = MessageModel.fromJson(json.decode(response.body));
         var errorMessage = "Get Uri Exception: (${response.statusCode}) ${messageModel.message}. Uri: ${uri.toString()}";
-        debugPrint(errorMessage);
+        YLog.d(errorMessage);
         return ErrorResponse(response.statusCode, errorMessage, messageModel.displayMessage ?? "");
       }
       return SuccessResponse(response.body);
     } catch (e) {
       var errorMessage = "Get Uri Exception($e) : ${uri.toString()}";
-      debugPrint(errorMessage);
+      YLog.d(errorMessage);
       return ErrorResponse(400, errorMessage, "Please try again");
     }
   }

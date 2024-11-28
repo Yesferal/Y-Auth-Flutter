@@ -3,6 +3,7 @@ import 'package:example/example_auth_environment.dart';
 import 'package:flutter/material.dart';
 import 'package:y_auth/domain/model/session_model.dart';
 import 'package:y_auth/domain/model/token_model.dart';
+import 'package:y_auth/framework/logger/y_log.dart';
 import 'package:y_auth/y_auth.dart';
 
 void main() {
@@ -148,16 +149,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _getAccessTokenSuccess(TokenModel? tokenModel) {
     if (tokenModel != null) {
-      debugPrint("Access Token: ${tokenModel.expressToken?.accessToken}");
-      debugPrint("Refresh Token: ${tokenModel.expressToken?.refreshToken}");
+      YLog.d("Access Token: ${tokenModel.expressToken?.accessToken}");
+      YLog.d("Refresh Token: ${tokenModel.expressToken?.refreshToken}");
     } else {
-      debugPrint("Token is null");
+      YLog.d("Token is null");
       _navigateToLoginScreen();
     }
   }
 
   _getAccessTokenError(String message) {
-    debugPrint("Error Message: ${message}");
+    YLog.d("Error Message: ${message}");
     _navigateToLoginScreen();
   }
 

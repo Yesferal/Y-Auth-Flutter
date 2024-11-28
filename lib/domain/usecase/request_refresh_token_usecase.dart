@@ -7,6 +7,7 @@ import 'package:y_auth/domain/abstract/preferences_datasource.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
 import 'package:y_auth/domain/model/session_model.dart';
 import 'package:y_auth/domain/model/token_model.dart';
+import 'package:y_auth/framework/logger/y_log.dart';
 
 class RequestRefreshTokenUseCase {
   RemoteStorageDatasource _remoteStorageDatasource;
@@ -25,7 +26,7 @@ class RequestRefreshTokenUseCase {
         break;
 
       case SuccessResponse():
-        debugPrint("Body: ${authResponse.body}");
+        YLog.d("Body: ${authResponse.body}");
         try {
           TokenModel tokenModel = TokenModel.fromJson(
               json.decode(authResponse.body));
@@ -37,7 +38,7 @@ class RequestRefreshTokenUseCase {
               json.decode(authResponse.body));
           _preferencesDatasource.saveSession(jsonEncode(sessionModel.toJson()));
         } catch (e) {
-          debugPrint("RequestRefreshTokenUseCase: Token Model exception: ${e}");
+          YLog.d("RequestRefreshTokenUseCase: Token Model exception: ${e}");
         }
 
         break;

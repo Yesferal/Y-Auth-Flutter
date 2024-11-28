@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:y_auth/domain/abstract/preferences_datasource.dart';
 import 'package:y_auth/domain/model/session_model.dart';
+import 'package:y_auth/framework/logger/y_log.dart';
 
 class GetCurrentSessionUseCase {
   PreferencesDatasource _preferencesDatasource;
@@ -12,13 +13,13 @@ class GetCurrentSessionUseCase {
 
   Future<SessionModel?> execute() async {
     String session = await _preferencesDatasource.getSession();
-    debugPrint("GetCurrentSessionUseCase: Session: ${session}");
+    YLog.d("GetCurrentSessionUseCase: Session: ${session}");
     try {
       if (session.isNotEmpty) {
         return SessionModel.fromJson(json.decode(session));
       }
     } catch (e) {
-      debugPrint("GetCurrentSessionUseCase: Exception: ${e}");
+      YLog.d("GetCurrentSessionUseCase: Exception: ${e}");
     }
 
     return null;
