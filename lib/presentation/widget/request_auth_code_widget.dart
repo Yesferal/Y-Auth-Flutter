@@ -1,11 +1,10 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:y_auth/domain/abstract/auth_environment.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
-import 'package:y_auth/domain/model/message_model.dart';
+import 'package:y_auth/domain/model/token_model.dart';
 import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
 import 'package:y_auth/framework/logger/y_log.dart';
@@ -88,8 +87,9 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
                             break;
                           case SuccessResponse():
                             try {
-                              MessageModel messageModel =
-                                  MessageModel.fromJson(json.decode(response.body));
+                              ApiResponseModel apiResponseModel =
+                                  ApiResponseModel.fromJson(
+                                      json.decode(response.body));
                               if (context.mounted) {
                                 Navigator.push(
                                     context,
@@ -101,7 +101,7 @@ class _RequestAuthCodeScreenState extends State<RequestAuthCodeScreen> {
                                                 widget.appColor,
                                                 widget.appName,
                                                 emailInput,
-                                                messageModel.displayMessage ??
+                                                apiResponseModel.messages?.displayMessage ??
                                                     "Once you enter the code we sent to your email, you'll be all toggled in")));
                               }
                             } catch (e) {

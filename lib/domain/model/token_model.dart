@@ -1,16 +1,18 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 
-class TokenModel {
-  String? message;
+import 'package:y_auth/domain/model/message_model.dart';
+
+class ApiResponseModel {
+  MessageModel? messages;
   ExpressToken? expressToken;
 
-  TokenModel.fromJson(Map? json)
-      : message = json?['message'],
+  ApiResponseModel.fromJson(Map? json)
+      : messages = MessageModel.fromJson(json?['messages']),
         expressToken = ExpressToken.fromJson(json?['expressToken']);
 
   Map toJson() {
     return {
-      'message': message,
+      'messages': messages?.toJson(),
       'expressToken': expressToken?.toJson()
     };
   }

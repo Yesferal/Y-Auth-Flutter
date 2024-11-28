@@ -28,11 +28,11 @@ class RequestRefreshTokenUseCase {
       case SuccessResponse():
         YLog.d("Body: ${authResponse.body}");
         try {
-          TokenModel tokenModel = TokenModel.fromJson(
+          ApiResponseModel apiResponseModel = ApiResponseModel.fromJson(
               json.decode(authResponse.body));
-          if (tokenModel.expressToken?.refreshToken != null) {
+          if (apiResponseModel.expressToken?.refreshToken != null) {
             _preferencesDatasource.saveRefreshToken(
-                tokenModel.expressToken?.refreshToken ?? "");
+                apiResponseModel.expressToken?.refreshToken ?? "");
           }
           SessionModel sessionModel = SessionModel.fromJson(
               json.decode(authResponse.body));

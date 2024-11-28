@@ -13,7 +13,7 @@ class GetAccessTokenUseCase {
   PreferencesDatasource _preferencesDatasource;
   RequestAccessTokenUseCase _requestAccessTokenUseCase;
   SignOutUseCase _signOutUseCase;
-  TokenModel? tokenModel;
+  ApiResponseModel? apiResponseModel;
 
   /// This Delta is used to avoid errors.
   /// The expiration time will be precise.
@@ -25,11 +25,11 @@ class GetAccessTokenUseCase {
   GetAccessTokenUseCase(this._preferencesDatasource,
       this._requestAccessTokenUseCase, this._signOutUseCase);
 
-  void execute(Function(TokenModel? tokenModel) onComplete,
+  void execute(Function(ApiResponseModel? apiResponseModel) onComplete,
       Function(String) onErrorRefreshTokenExpired,
       {forceNewToken = false}) async {
-    int? expiredIn = tokenModel?.expressToken?.expiredIn;
-    int? requestedAt = tokenModel?.expressToken?.requestedAt;
+    int? expiredIn = apiResponseModel?.expressToken?.expiredIn;
+    int? requestedAt = apiResponseModel?.expressToken?.requestedAt;
     if (!forceNewToken && expiredIn != null && requestedAt != null) {
       int nowInMilliseconds = DateTime.now().millisecondsSinceEpoch;
       int lastTokenRequestPlusDelta =
@@ -38,8 +38,8 @@ class GetAccessTokenUseCase {
           expiredIn < (nowInMilliseconds - lastTokenRequestPlusDelta);
       if (!tokenHasExpired) {
         YLog.d(
-            "Y-Auth: GetAccessTokenUseCase:: Token is still valid ${tokenModel}");
-        onComplete(tokenModel);
+            "Y-Auth: GetAccessTokenUseCase:: Token is still valid ${apiResponseModel}");
+        onComplete(apiResponseModel);
         return;
       } else {
         YLog.d("Y-Auth: GetAccessTokenUseCase: Access Token has expired");
@@ -66,7 +66,7 @@ class GetAccessTokenUseCase {
 
         case SuccessResponse():
           try {
-            tokenModel = TokenModel.fromJson(json.decode(authResponse.body));
+            apiResponseModel = ApiResponseModel.fromJson(json.decode(authResponse.body));
           } catch (e) {
             YLog.d("GetNewAccessToken: Token Model exception: ${e}");
           }
@@ -77,6 +77,6 @@ class GetAccessTokenUseCase {
       return;
     }
 
-    onComplete(tokenModel);
+    onComplete(apiResponseModel);
   }
 }

@@ -147,10 +147,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _getAccessTokenSuccess(TokenModel? tokenModel) {
-    if (tokenModel != null) {
-      YLog.d("Access Token: ${tokenModel.expressToken?.accessToken}");
-      YLog.d("Refresh Token: ${tokenModel.expressToken?.refreshToken}");
+  _getAccessTokenSuccess(ApiResponseModel? apiResponseModel) {
+    if (apiResponseModel != null) {
+      YLog.d("Access Token: ${apiResponseModel.expressToken?.accessToken}");
+      YLog.d("Refresh Token: ${apiResponseModel.expressToken?.refreshToken}");
     } else {
       YLog.d("Token is null");
       _navigateToLoginScreen();
