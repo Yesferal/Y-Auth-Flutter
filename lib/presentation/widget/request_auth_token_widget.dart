@@ -109,6 +109,8 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(widget.message),
+            const SizedBox(height: 12),
+            Text("Didn't get the email? Please check your spam folder."),
             const SizedBox(height: 24),
             const Text("Code", style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
