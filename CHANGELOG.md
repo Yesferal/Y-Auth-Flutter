@@ -1,4 +1,13 @@
-## 1.0.2 -- In Progress
+## 1.0.4--pending
+
+## 1.0.3
+- Add Span message alert (acb8369) <Yesferal Cueva>
+- Fix SignOut error & Add CacheApiResponse UseCase (47f8283) <Yesferal Cueva>
+- Update Message Model (0d17fc6) <Yesferal Cueva>
+- Create a YLog (Logger) (38b253c) <Yesferal Cueva>
+- Include the pretty format in Readme.md (21fd02f) <Yesferal Cueva>
+
+## 1.0.2
 
 * 53c4653 - Fix: Add try/catch when we map a json <Yesferal Cueva>
 * a28e8b9 - Get the message from server <Yesferal Cueva>

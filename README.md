@@ -46,7 +46,7 @@ After that, update the following files `README.md`, `CHANGELOG.md` & `pubspec.ya
 
 If you want to add commits/changes to `CHANGELOG.md`, then you can use the following pretty format
 ```
-git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset' --abbrev-commit
+git log --pretty="- %s (%h) <%an>"
 ```
 
 Use the dart command to publish the package for the first time 
