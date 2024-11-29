@@ -129,7 +129,7 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
                       setState(() {
                         _isButtonEnabled = false;
                       });
-                      YLog.d("Device Info: " + (deviceModel ?? ""));
+                      YLog.d("Device Info: ${deviceModel ?? ""}");
                       var response = await RequestRefreshTokenUseCase(
                               HttpDataSource(widget.authEnvironment),
                               SharedPreferenceDataSource(),

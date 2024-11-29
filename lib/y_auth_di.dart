@@ -14,7 +14,7 @@ import 'package:y_auth/framework/preferences/shared_preferences_datasource.dart'
 import 'package:y_auth/presentation/widget/request_auth_code_widget.dart';
 
 class YAuthDi {
-  AuthEnvironment _authEnvironment;
+  final AuthEnvironment _authEnvironment;
 
   YAuthDi(this._authEnvironment);
 

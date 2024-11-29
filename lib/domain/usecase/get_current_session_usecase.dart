@@ -1,7 +1,6 @@
 /* Copyright © 2024 Yesferal Cueva. All rights reserved. */
 
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:y_auth/domain/abstract/preferences_datasource.dart';
 import 'package:y_auth/domain/model/session_model.dart';
 import 'package:y_auth/framework/logger/y_log.dart';

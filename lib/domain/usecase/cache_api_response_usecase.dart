@@ -15,7 +15,7 @@ class CacheApiResponseUseCase {
   ApiResponseModel? _apiResponseModel;
 
   void update(ApiResponseModel? apiResponseModel) async {
-    this._apiResponseModel = apiResponseModel;
+    _apiResponseModel = apiResponseModel;
   }
 
   ApiResponseModel? getApiResponseModel() {

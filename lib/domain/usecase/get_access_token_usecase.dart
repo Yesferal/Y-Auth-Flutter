@@ -10,7 +10,7 @@ import 'package:y_auth/domain/usecase/cache_api_response_usecase.dart';
 import 'package:y_auth/framework/logger/y_log.dart';
 
 class GetAccessTokenUseCase {
-  PreferencesDatasource _preferencesDatasource;
+  final PreferencesDatasource _preferencesDatasource;
   RequestAccessTokenUseCase _requestAccessTokenUseCase;
   SignOutUseCase _signOutUseCase;
   CacheApiResponseUseCase _cacheApiResponseUseCase;
