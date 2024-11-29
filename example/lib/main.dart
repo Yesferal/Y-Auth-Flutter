@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: () {
                 yAuthDi
-                    ?.getAccessToken()
+                    ?.getAccessTokenUseCase()
                     .execute(_getAccessTokenSuccess, _getAccessTokenError);
               },
               child: const Text('Get current or new Access token'),
@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: () {
                 yAuthDi
-                    ?.getAccessToken()
+                    ?.getAccessTokenUseCase()
                     .execute(_getAccessTokenSuccess, _getAccessTokenError, forceNewToken: true);
               },
               child: const Text('Get always a new Access token'),

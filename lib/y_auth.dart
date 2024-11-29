@@ -1,3 +1,3 @@
-library y_auth;
+library;
 
 export 'y_auth_di.dart';

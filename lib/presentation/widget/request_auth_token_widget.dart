@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:y_auth/domain/abstract/auth_environment.dart';
 import 'package:y_auth/domain/model/auth_response_model.dart';
+import 'package:y_auth/domain/usecase/cache_api_response_usecase.dart';
 import 'package:y_auth/domain/usecase/request_auth_code_usecase.dart';
 import 'package:y_auth/domain/usecase/request_refresh_token_usecase.dart';
 import 'package:y_auth/framework/device_info/device_info_plus_datasource.dart';
@@ -67,19 +68,16 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
   Widget build(BuildContext context) {
     var resentCodeWidget;
     if (_isSendingACode) {
-      resentCodeWidget = TextButton(
-          onPressed: null,
-          child: Text(
-              "Resending a new code"));
+      resentCodeWidget =
+          TextButton(onPressed: null, child: Text("Resending a new code"));
     } else if (_currentSeconds >= _timerMaxSeconds) {
       resentCodeWidget = TextButton(
         onPressed: () async {
           setState(() {
             _isSendingACode = true;
           });
-          var response = await RequestAuthCodeUseCase(
-              AuthEmailValidatorImpl(),
-              HttpDataSource(widget.authEnvironment))
+          var response = await RequestAuthCodeUseCase(AuthEmailValidatorImpl(),
+                  HttpDataSource(widget.authEnvironment))
               .execute(widget.appColor, widget.appName, widget.email);
 
           switch (response) {
@@ -99,8 +97,8 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
     } else {
       resentCodeWidget = TextButton(
           onPressed: null,
-          child: Text(
-              "Resend in ${_timerMaxSeconds - _currentSeconds} seconds"));
+          child:
+              Text("Resend in ${_timerMaxSeconds - _currentSeconds} seconds"));
     }
 
     return Scaffold(
@@ -132,7 +130,8 @@ class _RequestAuthTokenScreenScreenState extends State<RequestAuthTokenScreen> {
                       YLog.d("Device Info: " + (deviceModel ?? ""));
                       var response = await RequestRefreshTokenUseCase(
                               HttpDataSource(widget.authEnvironment),
-                              SharedPreferenceDataSource())
+                              SharedPreferenceDataSource(),
+                              CacheApiResponseUseCase())
                           .execute(widget.appPackageName, _myController.text,
                               deviceModel ?? "", widget.email);
 

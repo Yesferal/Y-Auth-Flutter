@@ -8,13 +8,13 @@ import 'package:y_auth/domain/usecase/get_access_token_usecase.dart';
 import 'package:y_auth/domain/usecase/get_current_session_usecase.dart';
 import 'package:y_auth/domain/usecase/request_access_token_usecase.dart';
 import 'package:y_auth/domain/usecase/sign_out_usecase.dart';
+import 'package:y_auth/domain/usecase/cache_api_response_usecase.dart';
 import 'package:y_auth/framework/http/auth_http_datasource.dart';
 import 'package:y_auth/framework/preferences/shared_preferences_datasource.dart';
 import 'package:y_auth/presentation/widget/request_auth_code_widget.dart';
 
 class YAuthDi {
   AuthEnvironment _authEnvironment;
-  GetAccessTokenUseCase? getAccessTokenUseCase;
 
   YAuthDi(this._authEnvironment);
 
@@ -30,12 +30,16 @@ class YAuthDi {
     return RequestAccessTokenUseCase(_getRemoteStorageDatasource());
   }
 
-  GetAccessTokenUseCase getAccessToken() {
-    GetAccessTokenUseCase useCase = getAccessTokenUseCase ??
-        GetAccessTokenUseCase(_getPreferencesDatasource(),
-            _getRequestAccessTokenUseCase(), getSignOutUseCase());
-    getAccessTokenUseCase = useCase;
-    return useCase;
+  CacheApiResponseUseCase _getCacheApiResponseUseCase() {
+    return CacheApiResponseUseCase();
+  }
+
+  GetAccessTokenUseCase getAccessTokenUseCase() {
+    return GetAccessTokenUseCase(
+        _getPreferencesDatasource(),
+        _getRequestAccessTokenUseCase(),
+        getSignOutUseCase(),
+        _getCacheApiResponseUseCase());
   }
 
   Widget getRequestAuthCodeScreen(
@@ -44,7 +48,8 @@ class YAuthDi {
   }
 
   SignOutUseCase getSignOutUseCase() {
-    return SignOutUseCase(_getPreferencesDatasource());
+    return SignOutUseCase(
+        _getPreferencesDatasource(), _getCacheApiResponseUseCase());
   }
 
   GetCurrentSessionUseCase getCurrentSessionUseCase() {
